@@ -1,0 +1,14 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Secretos: NUNCA subir
+.env
+
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Sistema y editor
+.DS_Store
+.vscode/
