@@ -22,6 +22,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 
 # Si existe un archivo .env, carga sus variables (opcional pero recomendado)
 try:
@@ -114,29 +115,72 @@ def estadisticas(agrupar_por: str, sumar: str):
 
 # ==== CREAR ================================================================
 # 👈 CAMBIA estos campos por los de TU coleccion (mismos nombres y tipos).
+
 class NuevoRegistro(BaseModel):
-    sucursal: str
-    producto: str
-    cantidad: int
-    total: int
-    medio_pago: str
+    # Información principal del terremoto
+    event_id: str
+    magnitude: float
+    place: str
+    time: int
+    depth_km: float
+    latitude: float
+    longitude: float
+    magnitude_type: Optional[str] = None
+    tsunami: int = 0
+
+    # Información adicional del USGS
+    updated: Optional[int] = None
+    felt: Optional[int] = None
+    cdi: Optional[float] = None
+    mmi: Optional[float] = None
+    alert: Optional[str] = None
+    significance: Optional[int] = None
+    status: Optional[str] = None
+    network: Optional[str] = None
+    code: Optional[str] = None
+    stations: Optional[int] = None
+    distance: Optional[float] = None
+    rms: Optional[float] = None
+    gap: Optional[float] = None
+    event_type: str = "earthquake"
+    url: Optional[str] = None
+    detail_url: Optional[str] = None
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "sucursal": "Norte",
-                "producto": "Cafe",
-                "cantidad": 2,
-                "total": 15000,
-                "medio_pago": "Tarjeta",
+                "event_id": "prueba-001",
+                "magnitude": 4.5,
+                "place": "Evento de prueba",
+                "time": 1735697312976,
+                "depth_km": 15.0,
+                "latitude": 4.71,
+                "longitude": -74.07,
+                "magnitude_type": "mb",
+                "tsunami": 0
             }
         }
     }
 
 
-@app.post("/datos")
+
+
+@app.post("/datos", status_code=201)
 def crear(registro: NuevoRegistro):
-    """Inserta un nuevo documento en la coleccion."""
+    """Inserta un nuevo terremoto en MongoDB."""
+
     doc = registro.model_dump()
-    resultado = coleccion.insert_one(doc)
-    return {"mensaje": "Registro creado", "id": str(resultado.inserted_id)}
+
+    try:
+        resultado = coleccion.insert_one(doc)
+    except DuplicateKeyError:
+        raise HTTPException(
+            status_code=409,
+            detail="Ya existe un terremoto con ese event_id"
+        )
+
+    return {
+        "mensaje": "Terremoto registrado correctamente",
+        "id": str(resultado.inserted_id)
+    }
+
