@@ -116,7 +116,9 @@ def estadisticas(agrupar_por: str, sumar: str):
 # ==== CREAR ================================================================
 # 👈 CAMBIA estos campos por los de TU coleccion (mismos nombres y tipos).
 
+
 class NuevoRegistro(BaseModel):
+
     # Información principal del terremoto
     event_id: str
     magnitude: float
@@ -125,21 +127,23 @@ class NuevoRegistro(BaseModel):
     depth_km: float
     latitude: float
     longitude: float
+    significance: int
+
+    # Información que puede contener valores nulos
     magnitude_type: Optional[str] = None
-    tsunami: int = 0
+    distance: Optional[float] = None
+    alert: Optional[str] = None
+    status: Optional[str] = None
+    network: Optional[str] = None
 
     # Información adicional del USGS
+    tsunami: int = 0
     updated: Optional[int] = None
     felt: Optional[int] = None
     cdi: Optional[float] = None
     mmi: Optional[float] = None
-    alert: Optional[str] = None
-    significance: Optional[int] = None
-    status: Optional[str] = None
-    network: Optional[str] = None
     code: Optional[str] = None
     stations: Optional[int] = None
-    distance: Optional[float] = None
     rms: Optional[float] = None
     gap: Optional[float] = None
     event_type: str = "earthquake"
@@ -151,16 +155,24 @@ class NuevoRegistro(BaseModel):
             "example": {
                 "event_id": "prueba-001",
                 "magnitude": 4.5,
-                "place": "Evento de prueba",
+                "place": "10 km N of ejemplo",
                 "time": 1735697312976,
                 "depth_km": 15.0,
                 "latitude": 4.71,
                 "longitude": -74.07,
+                "significance": 250,
                 "magnitude_type": "mb",
-                "tsunami": 0
+                "distance": 0.12,
+                "tsunami": 0,
+                "alert": None,
+                "status": "reviewed",
+                "network": "us",
+                "updated": 1735697314000,
+                "event_type": "earthquake"
             }
         }
     }
+
 
 
 
