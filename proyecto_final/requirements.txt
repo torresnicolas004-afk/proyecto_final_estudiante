@@ -3,5 +3,6 @@ pandas
 fastapi
 uvicorn
 streamlit
+altair
 requests
 python-dotenv

@@ -55,7 +55,6 @@ py -m venv venv                 # Windows   (Mac: python3 -m venv venv)
 .\venv\Scripts\Activate.ps1     # Windows   (Mac: source venv/bin/activate)
 
 # 2. Instala las librerías
-pip install -r requirements.txtp
 py -m pip install -r requirements.txt
 
 # 3. Crea tu archivo de secretos
